@@ -1,0 +1,2242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+      viewport-fit=cover">
+
+<meta name="theme-color" content="#08090d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Spendly">
+
+<link rel="manifest" href="manifest.json">
+
+<title>Spendly — Expense Tracker</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --bg:#08090d;
+    --card:#11131a;
+    --card2:#151821;
+    --border:rgba(255,255,255,.08);
+    --text:#f5f7fb;
+    --muted:#8d93a3;
+    --purple:#8b7cff;
+    --purple2:#6c5ce7;
+    --green:#43d69b;
+    --red:#ff6577;
+    --yellow:#f5c85b;
+    --radius:22px;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:"DM Sans",sans-serif;
+    background:
+        radial-gradient(circle at 10% 0%,rgba(139,124,255,.13),transparent 28%),
+        radial-gradient(circle at 90% 20%,rgba(67,214,155,.06),transparent 25%),
+        var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    padding-bottom:env(safe-area-inset-bottom);
+}
+
+button,input,select,textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.app{
+    width:min(1200px,94%);
+    margin:auto;
+    padding:32px 0 50px;
+}
+
+/* HEADER */
+
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo{
+    width:45px;
+    height:45px;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,var(--purple),#5e50dc);
+    font-size:21px;
+    font-weight:800;
+    box-shadow:0 10px 35px rgba(139,124,255,.22);
+}
+
+.brand h1{
+    font-family:Manrope,sans-serif;
+    font-size:23px;
+}
+
+.brand p{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:2px;
+}
+
+.header-actions{
+    display:flex;
+    gap:9px;
+}
+
+.btn{
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.035);
+    color:var(--text);
+    padding:10px 15px;
+    border-radius:12px;
+    transition:.2s;
+}
+
+.btn:hover{
+    background:rgba(255,255,255,.07);
+    transform:translateY(-1px);
+}
+
+.btn.primary{
+    background:linear-gradient(135deg,var(--purple),var(--purple2));
+    border:none;
+}
+
+/* DASHBOARD */
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.stat{
+    background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px;
+    position:relative;
+    overflow:hidden;
+}
+
+.stat:after{
+    content:"";
+    position:absolute;
+    width:90px;
+    height:90px;
+    right:-35px;
+    bottom:-35px;
+    background:rgba(139,124,255,.08);
+    border-radius:50%;
+}
+
+.stat-label{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.stat-value{
+    font-family:Manrope,sans-serif;
+    font-size:28px;
+    font-weight:800;
+}
+
+.stat-small{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:7px;
+}
+
+/* MAIN GRID */
+
+.main-grid{
+    display:grid;
+    grid-template-columns:1.45fr .85fr;
+    gap:18px;
+}
+
+.card{
+    background:rgba(17,19,26,.82);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px;
+    backdrop-filter:blur(15px);
+}
+
+.card-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.card-title h2{
+    font-family:Manrope,sans-serif;
+    font-size:17px;
+}
+
+.card-title span{
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* FORM */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1.3fr .7fr;
+    gap:12px;
+}
+
+.field{
+    margin-bottom:12px;
+}
+
+.field label{
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:7px;
+}
+
+input,select,textarea{
+    width:100%;
+    background:#0c0e14;
+    border:1px solid var(--border);
+    color:var(--text);
+    border-radius:12px;
+    padding:12px 13px;
+    outline:none;
+    transition:.2s;
+}
+
+input:focus,select:focus,textarea:focus{
+    border-color:rgba(139,124,255,.7);
+    box-shadow:0 0 0 3px rgba(139,124,255,.08);
+}
+
+textarea{
+    resize:vertical;
+    min-height:75px;
+}
+
+.full{
+    grid-column:1/-1;
+}
+
+.add-btn{
+    width:100%;
+    padding:13px;
+    border:none;
+    border-radius:13px;
+    color:white;
+    font-weight:700;
+    background:linear-gradient(135deg,var(--purple),var(--purple2));
+    box-shadow:0 10px 25px rgba(108,92,231,.2);
+}
+
+/* BUDGET */
+
+.budget-box{
+    background:#0c0e14;
+    border:1px solid var(--border);
+    padding:17px;
+    border-radius:16px;
+}
+
+.budget-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:13px;
+}
+
+.budget-top span{
+    font-size:13px;
+}
+
+.budget-top strong{
+    font-size:14px;
+}
+
+.progress{
+    height:8px;
+    background:#20232c;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    width:0;
+    background:linear-gradient(90deg,var(--purple),var(--green));
+    border-radius:20px;
+    transition:.4s;
+}
+
+.budget-input{
+    display:flex;
+    gap:8px;
+    margin-top:13px;
+}
+
+.budget-input input{
+    flex:1;
+}
+
+.budget-input button{
+    border:none;
+    background:#20232d;
+    color:white;
+    padding:0 15px;
+    border-radius:11px;
+}
+
+/* CATEGORY */
+
+.category-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.category-row{
+    display:grid;
+    grid-template-columns:85px 1fr 70px;
+    align-items:center;
+    gap:10px;
+    font-size:12px;
+}
+
+.category-name{
+    color:#cdd1dc;
+}
+
+.category-track{
+    height:7px;
+    background:#20232c;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.category-fill{
+    height:100%;
+    background:linear-gradient(90deg,var(--purple),#a095ff);
+    border-radius:20px;
+}
+
+.category-amount{
+    text-align:right;
+    color:var(--muted);
+}
+
+/* HISTORY */
+
+.history{
+    margin-top:18px;
+}
+
+.month-card{
+    border:1px solid var(--border);
+    background:#0d0f15;
+    border-radius:17px;
+    padding:17px;
+    margin-bottom:11px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.month-card:hover{
+    border-color:rgba(139,124,255,.45);
+    transform:translateY(-1px);
+}
+
+.month-card.active{
+    border-color:rgba(139,124,255,.65);
+    background:rgba(139,124,255,.06);
+}
+
+.month-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:11px;
+}
+
+.month-name{
+    font-weight:700;
+}
+
+.month-total{
+    font-family:Manrope,sans-serif;
+    font-weight:800;
+}
+
+.month-info{
+    display:flex;
+    justify-content:space-between;
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:9px;
+}
+
+.month-progress{
+    height:6px;
+    background:#20232c;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.month-progress-fill{
+    height:100%;
+    border-radius:20px;
+    background:linear-gradient(90deg,var(--purple),var(--green));
+}
+
+/* MONTH SELECTOR */
+
+.month-selector{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#0c0e14;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:8px;
+    margin-bottom:18px;
+}
+
+.month-selector button{
+    width:36px;
+    height:34px;
+    border:none;
+    border-radius:9px;
+    color:white;
+    background:#191c25;
+}
+
+.month-selector button:hover{
+    background:#242833;
+}
+
+.selected-month{
+    font-size:13px;
+    font-weight:700;
+}
+
+/* EXPENSES */
+
+.expense-tools{
+    display:flex;
+    gap:9px;
+    margin-bottom:14px;
+}
+
+.expense-tools input{
+    flex:1;
+}
+
+.expense-tools select{
+    width:145px;
+}
+
+.expense-list{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    max-height:470px;
+    overflow-y:auto;
+    padding-right:3px;
+}
+
+.expense{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#0d0f15;
+    border:1px solid var(--border);
+    padding:13px;
+    border-radius:15px;
+    transition:.2s;
+}
+
+.expense:hover{
+    background:#11141c;
+}
+
+.expense-left{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+}
+
+.expense-icon{
+    width:38px;
+    height:38px;
+    border-radius:11px;
+    display:grid;
+    place-items:center;
+    background:rgba(139,124,255,.11);
+    flex-shrink:0;
+}
+
+.expense-info{
+    min-width:0;
+}
+
+.expense-name{
+    font-size:13px;
+    font-weight:600;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.expense-meta{
+    color:var(--muted);
+    font-size:11px;
+    margin-top:3px;
+}
+
+.expense-right{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.expense-amount{
+    font-weight:700;
+    font-size:13px;
+}
+
+.delete{
+    border:none;
+    background:transparent;
+    color:#646a78;
+    font-size:15px;
+    padding:5px;
+}
+
+.delete:hover{
+    color:var(--red);
+}
+
+/* EMPTY */
+
+.empty{
+    text-align:center;
+    padding:35px 10px;
+    color:var(--muted);
+}
+
+.empty-icon{
+    font-size:30px;
+    margin-bottom:9px;
+}
+
+.empty p{
+    font-size:13px;
+}
+
+/* FOOTER */
+
+.footer{
+    text-align:center;
+    color:#565c69;
+    font-size:11px;
+    margin-top:30px;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .main-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:650px){
+
+    .app{
+        width:92%;
+        padding-top:20px;
+    }
+
+    header{
+        align-items:flex-start;
+    }
+
+    .header-actions .btn{
+        font-size:11px;
+        padding:9px 10px;
+    }
+
+    .dashboard{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+    .full{
+        grid-column:auto;
+    }
+
+    .expense-tools{
+        flex-direction:column;
+    }
+
+    .expense-tools select{
+        width:100%;
+    }
+
+    .category-row{
+        grid-template-columns:70px 1fr 65px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+
+    <div class="brand">
+
+        <div class="logo">₹</div>
+
+        <div>
+            <h1>Spendly</h1>
+            <p>Your simple personal expense tracker</p>
+        </div>
+
+    </div>
+
+    <div class="header-actions">
+
+        <button class="btn" onclick="exportCSV()">
+            Export CSV
+        </button>
+
+        <button class="btn primary" onclick="scrollToAdd()">
+            + Add
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- DASHBOARD -->
+
+<section class="dashboard">
+
+    <div class="stat">
+
+        <div class="stat-label" id="monthStatLabel">
+            This Month
+        </div>
+
+        <div class="stat-value" id="monthTotal">
+            ₹0
+        </div>
+
+        <div class="stat-small" id="monthTransactionCount">
+            0 transactions
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-label">
+            Today
+        </div>
+
+        <div class="stat-value" id="todayTotal">
+            ₹0
+        </div>
+
+        <div class="stat-small" id="todayCount">
+            0 transactions
+        </div>
+
+    </div>
+
+
+    <div class="stat">
+
+        <div class="stat-label">
+            Budget Remaining
+        </div>
+
+        <div class="stat-value" id="budgetRemaining">
+            ₹0
+        </div>
+
+        <div class="stat-small" id="budgetStatus">
+            Set a monthly budget
+        </div>
+
+    </div>
+
+</section>
+
+
+<div class="main-grid">
+
+
+<!-- LEFT -->
+
+<div>
+
+
+<!-- ADD EXPENSE -->
+
+<div class="card" id="addExpenseCard">
+
+    <div class="card-title">
+
+        <h2>Add expense</h2>
+
+        <span>
+            Saved automatically
+        </span>
+
+    </div>
+
+
+    <form id="expenseForm">
+
+        <div class="form-grid">
+
+            <div class="field">
+
+                <label>
+                    What did you spend on?
+                </label>
+
+                <input
+                    id="expenseName"
+                    type="text"
+                    placeholder="e.g. Lunch, Uber, Shoes..."
+                    required
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Amount
+                </label>
+
+                <input
+                    id="expenseAmount"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="₹ 0"
+                    required
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Category
+                </label>
+
+                <select id="expenseCategory">
+
+                    <option>Food</option>
+                    <option>Travel</option>
+                    <option>Shopping</option>
+                    <option>College</option>
+                    <option>Entertainment</option>
+                    <option>Bills</option>
+                    <option>Health</option>
+                    <option>Personal</option>
+                    <option>Other</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Date
+                </label>
+
+                <input
+                    id="expenseDate"
+                    type="date"
+                    required
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Payment method
+                </label>
+
+                <select id="expensePayment">
+
+                    <option>UPI</option>
+                    <option>Cash</option>
+                    <option>Debit Card</option>
+                    <option>Credit Card</option>
+                    <option>Net Banking</option>
+                    <option>Other</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    Note
+                </label>
+
+                <input
+                    id="expenseNote"
+                    type="text"
+                    placeholder="Optional"
+                >
+
+            </div>
+
+
+            <div class="field full">
+
+                <button
+                    class="add-btn"
+                    type="submit"
+                >
+                    Add Expense
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+<!-- MONTHLY HISTORY -->
+
+<div class="card history">
+
+    <div class="card-title">
+
+        <h2>
+            Monthly history
+        </h2>
+
+        <span id="historySubtitle">
+            All months
+        </span>
+
+    </div>
+
+    <div id="monthlyHistory"></div>
+
+</div>
+
+
+<!-- EXPENSE LIST -->
+
+<div class="card" style="margin-top:18px;">
+
+    <div class="card-title">
+
+        <h2 id="expenseListTitle">
+            Expenses
+        </h2>
+
+        <span id="expenseListCount">
+            0
+        </span>
+
+    </div>
+
+
+    <div class="expense-tools">
+
+        <input
+            id="searchInput"
+            type="text"
+            placeholder="Search expenses..."
+        >
+
+
+        <select id="filterCategory">
+
+            <option value="All">
+                All categories
+            </option>
+
+            <option>Food</option>
+            <option>Travel</option>
+            <option>Shopping</option>
+            <option>College</option>
+            <option>Entertainment</option>
+            <option>Bills</option>
+            <option>Health</option>
+            <option>Personal</option>
+            <option>Other</option>
+
+        </select>
+
+    </div>
+
+
+    <div
+        class="expense-list"
+        id="expenseList"
+    ></div>
+
+</div>
+
+</div>
+
+
+<!-- RIGHT -->
+
+<div>
+
+
+<!-- MONTH SELECTOR -->
+
+<div class="card">
+
+    <div class="card-title">
+
+        <h2>
+            Selected month
+        </h2>
+
+        <span>
+            Overview
+        </span>
+
+    </div>
+
+
+    <div class="month-selector">
+
+        <button onclick="changeMonth(-1)">
+            ‹
+        </button>
+
+        <div
+            class="selected-month"
+            id="selectedMonth"
+        >
+            September 2026
+        </div>
+
+        <button onclick="changeMonth(1)">
+            ›
+        </button>
+
+    </div>
+
+
+    <div class="budget-box">
+
+        <div class="budget-top">
+
+            <span>
+                Monthly budget
+            </span>
+
+            <strong id="budgetText">
+                ₹0
+            </strong>
+
+        </div>
+
+
+        <div class="progress">
+
+            <div
+                class="progress-bar"
+                id="budgetProgress"
+            ></div>
+
+        </div>
+
+
+        <div class="budget-input">
+
+            <input
+                id="budgetInput"
+                type="number"
+                placeholder="Set budget"
+            >
+
+            <button onclick="saveBudget()">
+                Save
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CATEGORY BREAKDOWN -->
+
+<div class="card" style="margin-top:18px;">
+
+    <div class="card-title">
+
+        <h2>
+            Category breakdown
+        </h2>
+
+        <span id="categoryMonthLabel"></span>
+
+    </div>
+
+    <div
+        class="category-list"
+        id="categoryList"
+    ></div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="footer">
+
+    Spendly • Your data stays in this browser
+
+</div>
+
+</div>
+
+
+<script>
+
+const STORAGE_KEY = "spendly_expenses";
+const BUDGET_KEY = "spendly_budget";
+
+let expenses =
+    JSON.parse(
+        localStorage.getItem(STORAGE_KEY) || "[]"
+    );
+
+let budget =
+    Number(
+        localStorage.getItem(BUDGET_KEY) || 0
+    );
+
+let selectedDate = new Date();
+
+
+const categories = [
+    "Food",
+    "Travel",
+    "Shopping",
+    "College",
+    "Entertainment",
+    "Bills",
+    "Health",
+    "Personal",
+    "Other"
+];
+
+
+const icons = {
+
+    Food:"🍔",
+    Travel:"🚗",
+    Shopping:"🛍️",
+    College:"🎓",
+    Entertainment:"🎬",
+    Bills:"📄",
+    Health:"❤️",
+    Personal:"👤",
+    Other:"💳"
+
+};
+
+
+/* DATE HELPERS */
+
+function dateKey(date){
+
+    return date.getFullYear() + "-" +
+        String(date.getMonth()+1).padStart(2,"0");
+
+}
+
+
+function todayKey(){
+
+    const d = new Date();
+
+    return d.getFullYear() + "-" +
+        String(d.getMonth()+1).padStart(2,"0") + "-" +
+        String(d.getDate()).padStart(2,"0");
+
+}
+
+
+function monthLabel(date){
+
+    return date.toLocaleDateString(
+        "en-IN",
+        {
+            month:"long",
+            year:"numeric"
+        }
+    );
+
+}
+
+
+function formatDate(date){
+
+    return new Date(
+        date + "T00:00:00"
+    ).toLocaleDateString(
+        "en-IN",
+        {
+            day:"numeric",
+            month:"short",
+            year:"numeric"
+        }
+    );
+
+}
+
+
+function formatMoney(amount){
+
+    return "₹" +
+        Number(amount).toLocaleString(
+            "en-IN",
+            {
+                maximumFractionDigits:2
+            }
+        );
+
+}
+
+
+/* SELECTED MONTH */
+
+function selectedMonthKey(){
+
+    return dateKey(selectedDate);
+
+}
+
+
+function getSelectedExpenses(){
+
+    const key =
+        selectedMonthKey();
+
+    return expenses.filter(e => {
+
+        return e.date.startsWith(key);
+
+    });
+
+}
+
+
+/* SAVE */
+
+function saveExpenses(){
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(expenses)
+    );
+
+}
+
+
+/* ADD EXPENSE */
+
+document.getElementById(
+    "expenseDate"
+).value =
+    new Date()
+    .toISOString()
+    .split("T")[0];
+
+
+document.getElementById(
+    "expenseForm"
+).addEventListener(
+    "submit",
+    function(e){
+
+        e.preventDefault();
+
+
+        const name =
+            document
+            .getElementById("expenseName")
+            .value
+            .trim();
+
+
+        const amount =
+            Number(
+                document
+                .getElementById("expenseAmount")
+                .value
+            );
+
+
+        const category =
+            document
+            .getElementById("expenseCategory")
+            .value;
+
+
+        const date =
+            document
+            .getElementById("expenseDate")
+            .value;
+
+
+        const payment =
+            document
+            .getElementById("expensePayment")
+            .value;
+
+
+        const note =
+            document
+            .getElementById("expenseNote")
+            .value
+            .trim();
+
+
+        if(
+            !name ||
+            !amount ||
+            amount <= 0 ||
+            !date
+        ){
+
+            return;
+
+        }
+
+
+        expenses.push({
+
+            id:Date.now(),
+
+            name,
+
+            amount,
+
+            category,
+
+            date,
+
+            payment,
+
+            note
+
+        });
+
+
+        saveExpenses();
+
+
+        this.reset();
+
+
+        document.getElementById(
+            "expenseDate"
+        ).value =
+            new Date()
+            .toISOString()
+            .split("T")[0];
+
+
+        renderAll();
+
+    }
+);
+
+
+/* DELETE */
+
+function deleteExpense(id){
+
+    expenses =
+        expenses.filter(
+            e => e.id !== id
+        );
+
+    saveExpenses();
+
+    renderAll();
+
+}
+
+
+/* BUDGET */
+
+function saveBudget(){
+
+    const value =
+        Number(
+            document
+            .getElementById("budgetInput")
+            .value
+        );
+
+
+    if(value < 0) return;
+
+
+    budget = value;
+
+
+    localStorage.setItem(
+        BUDGET_KEY,
+        budget
+    );
+
+
+    renderAll();
+
+}
+
+
+/* CHANGE MONTH */
+
+function changeMonth(amount){
+
+    selectedDate =
+        new Date(
+            selectedDate.getFullYear(),
+            selectedDate.getMonth() + amount,
+            1
+        );
+
+
+    renderAll();
+
+}
+
+
+/* MONTHLY HISTORY */
+
+function renderMonthlyHistory(){
+
+    const container =
+        document.getElementById(
+            "monthlyHistory"
+        );
+
+
+    container.innerHTML = "";
+
+
+    if(expenses.length === 0){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📅
+                </div>
+
+                <p>
+                    Your monthly history
+                    will appear here.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const months = {};
+
+
+    expenses.forEach(expense => {
+
+        const key =
+            expense.date.slice(0,7);
+
+
+        if(!months[key]){
+
+            months[key] = {
+                total:0,
+                count:0
+            };
+
+        }
+
+
+        months[key].total +=
+            Number(expense.amount);
+
+
+        months[key].count++;
+
+    });
+
+
+    const sortedMonths =
+        Object.keys(months)
+        .sort()
+        .reverse();
+
+
+    const highest =
+        Math.max(
+            ...sortedMonths.map(
+                key => months[key].total
+            ),
+            1
+        );
+
+
+    sortedMonths.forEach(key => {
+
+        const [year,month] =
+            key.split("-");
+
+
+        const date =
+            new Date(
+                Number(year),
+                Number(month)-1,
+                1
+            );
+
+
+        const data =
+            months[key];
+
+
+        const percentage =
+            Math.min(
+                (data.total / highest) * 100,
+                100
+            );
+
+
+        const card =
+            document.createElement("div");
+
+
+        card.className =
+            "month-card" +
+            (
+                key === selectedMonthKey()
+                ? " active"
+                : ""
+            );
+
+
+        card.onclick = () => {
+
+            selectedDate =
+                new Date(
+                    Number(year),
+                    Number(month)-1,
+                    1
+                );
+
+            renderAll();
+
+        };
+
+
+        card.innerHTML = `
+
+            <div class="month-top">
+
+                <div class="month-name">
+                    ${monthLabel(date)}
+                </div>
+
+                <div class="month-total">
+                    ${formatMoney(data.total)}
+                </div>
+
+            </div>
+
+
+            <div class="month-info">
+
+                <span>
+
+                    ${data.count}
+
+                    ${
+                        data.count === 1
+                        ? "transaction"
+                        : "transactions"
+                    }
+
+                </span>
+
+                <span>
+                    ${Math.round(percentage)}%
+                </span>
+
+            </div>
+
+
+            <div class="month-progress">
+
+                <div
+                    class="month-progress-fill"
+                    style="width:${percentage}%"
+                ></div>
+
+            </div>
+
+        `;
+
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/* DASHBOARD */
+
+function renderDashboard(){
+
+    const selected =
+        getSelectedExpenses();
+
+
+    const total =
+        selected.reduce(
+            (sum,e) =>
+                sum + Number(e.amount),
+            0
+        );
+
+
+    const today =
+        todayKey();
+
+
+    const todayExpenses =
+        expenses.filter(
+            e => e.date === today
+        );
+
+
+    const todayTotal =
+        todayExpenses.reduce(
+            (sum,e) =>
+                sum + Number(e.amount),
+            0
+        );
+
+
+    document.getElementById(
+        "monthTotal"
+    ).textContent =
+        formatMoney(total);
+
+
+    document.getElementById(
+        "monthTransactionCount"
+    ).textContent =
+        selected.length +
+        (
+            selected.length === 1
+            ? " transaction"
+            : " transactions"
+        );
+
+
+    document.getElementById(
+        "todayTotal"
+    ).textContent =
+        formatMoney(todayTotal);
+
+
+    document.getElementById(
+        "todayCount"
+    ).textContent =
+        todayExpenses.length +
+        (
+            todayExpenses.length === 1
+            ? " transaction"
+            : " transactions"
+        );
+
+
+    document.getElementById(
+        "selectedMonth"
+    ).textContent =
+        monthLabel(selectedDate);
+
+
+    document.getElementById(
+        "monthStatLabel"
+    ).textContent =
+        monthLabel(selectedDate);
+
+
+    document.getElementById(
+        "categoryMonthLabel"
+    ).textContent =
+        monthLabel(selectedDate);
+
+
+    document.getElementById(
+        "budgetText"
+    ).textContent =
+        budget > 0
+        ? formatMoney(budget)
+        : "Not set";
+
+
+    const remaining =
+        budget - total;
+
+
+    document.getElementById(
+        "budgetRemaining"
+    ).textContent =
+        budget > 0
+        ? formatMoney(remaining)
+        : "—";
+
+
+    if(budget <= 0){
+
+        document.getElementById(
+            "budgetStatus"
+        ).textContent =
+            "Set a monthly budget";
+
+
+        document.getElementById(
+            "budgetProgress"
+        ).style.width =
+            "0%";
+
+    }
+
+    else{
+
+        const percent =
+            Math.min(
+                (total / budget) * 100,
+                100
+            );
+
+
+        document.getElementById(
+            "budgetProgress"
+        ).style.width =
+            percent + "%";
+
+
+        document.getElementById(
+            "budgetStatus"
+        ).textContent =
+            total > budget
+            ? "Over budget"
+            : Math.round(percent) +
+              "% used";
+
+    }
+
+
+    document.getElementById(
+        "budgetInput"
+    ).value =
+        budget || "";
+
+}
+
+
+/* CATEGORY BREAKDOWN */
+
+function renderCategories(){
+
+    const selected =
+        getSelectedExpenses();
+
+
+    const totals = {};
+
+
+    categories.forEach(category => {
+
+        totals[category] = 0;
+
+    });
+
+
+    selected.forEach(expense => {
+
+        totals[expense.category] +=
+            Number(expense.amount);
+
+    });
+
+
+    const max =
+        Math.max(
+            ...Object.values(totals),
+            1
+        );
+
+
+    const container =
+        document.getElementById(
+            "categoryList"
+        );
+
+
+    container.innerHTML = "";
+
+
+    categories.forEach(category => {
+
+        const amount =
+            totals[category];
+
+
+        if(amount === 0) return;
+
+
+        const percentage =
+            (amount / max) * 100;
+
+
+        const row =
+            document.createElement("div");
+
+
+        row.className =
+            "category-row";
+
+
+        row.innerHTML = `
+
+            <div class="category-name">
+
+                ${icons[category]}
+                ${category}
+
+            </div>
+
+
+            <div class="category-track">
+
+                <div
+                    class="category-fill"
+                    style="width:${percentage}%"
+                ></div>
+
+            </div>
+
+
+            <div class="category-amount">
+
+                ${formatMoney(amount)}
+
+            </div>
+
+        `;
+
+
+        container.appendChild(row);
+
+    });
+
+
+    if(container.innerHTML === ""){
+
+        container.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📊
+                </div>
+
+                <p>
+                    No expenses for this month.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* EXPENSE LIST */
+
+function renderExpenses(){
+
+    const search =
+        document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    const category =
+        document
+        .getElementById("filterCategory")
+        .value;
+
+
+    let selected =
+        getSelectedExpenses();
+
+
+    selected =
+        selected.filter(expense => {
+
+            const matchesSearch =
+                expense.name
+                .toLowerCase()
+                .includes(search);
+
+
+            const matchesCategory =
+                category === "All" ||
+                expense.category === category;
+
+
+            return (
+                matchesSearch &&
+                matchesCategory
+            );
+
+        });
+
+
+    selected.sort(
+        (a,b) =>
+            new Date(b.date) -
+            new Date(a.date) ||
+            b.id - a.id
+    );
+
+
+    const list =
+        document.getElementById(
+            "expenseList"
+        );
+
+
+    list.innerHTML = "";
+
+
+    document.getElementById(
+        "expenseListCount"
+    ).textContent =
+        selected.length;
+
+
+    document.getElementById(
+        "expenseListTitle"
+    ).textContent =
+        "Expenses • " +
+        monthLabel(selectedDate);
+
+
+    if(selected.length === 0){
+
+        list.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    💸
+                </div>
+
+                <p>
+                    No expenses found
+                    for this month.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    selected.forEach(expense => {
+
+        const item =
+            document.createElement("div");
+
+
+        item.className =
+            "expense";
+
+
+        item.innerHTML = `
+
+            <div class="expense-left">
+
+                <div class="expense-icon">
+
+                    ${
+                        icons[expense.category]
+                        || "💳"
+                    }
+
+                </div>
+
+
+                <div class="expense-info">
+
+                    <div class="expense-name">
+
+                        ${escapeHTML(
+                            expense.name
+                        )}
+
+                    </div>
+
+
+                    <div class="expense-meta">
+
+                        ${expense.category}
+
+                        •
+
+                        ${formatDate(
+                            expense.date
+                        )}
+
+                        •
+
+                        ${expense.payment}
+
+                        ${
+                            expense.note
+                            ? " • " +
+                              escapeHTML(
+                                  expense.note
+                              )
+                            : ""
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="expense-right">
+
+                <div class="expense-amount">
+
+                    ${formatMoney(
+                        expense.amount
+                    )}
+
+                </div>
+
+
+                <button
+                    class="delete"
+                    onclick="deleteExpense(${expense.id})"
+                    title="Delete"
+                >
+                    ✕
+                </button>
+
+            </div>
+
+        `;
+
+
+        list.appendChild(item);
+
+    });
+
+}
+
+
+/* HTML ESCAPE */
+
+function escapeHTML(text){
+
+    return String(text)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* CSV EXPORT */
+
+function exportCSV(){
+
+    if(expenses.length === 0){
+
+        alert(
+            "No expenses to export."
+        );
+
+        return;
+
+    }
+
+
+    let csv =
+        "Date,Name,Amount,Category,Payment Method,Note\n";
+
+
+    expenses.forEach(e => {
+
+        csv += [
+
+            e.date,
+
+            `"${String(e.name)
+                .replace(/"/g,'""')}"`,
+
+            e.amount,
+
+            e.category,
+
+            e.payment,
+
+            `"${String(e.note || "")
+                .replace(/"/g,'""')}"`
+
+        ].join(",") + "\n";
+
+    });
+
+
+    const blob =
+        new Blob(
+            [csv],
+            {
+                type:
+                    "text/csv;charset=utf-8;"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+
+    const a =
+        document.createElement("a");
+
+
+    a.href = url;
+
+
+    a.download =
+        "spendly-expenses.csv";
+
+
+    a.click();
+
+
+    URL.revokeObjectURL(url);
+
+}
+
+
+/* SCROLL TO ADD */
+
+function scrollToAdd(){
+
+    document
+        .getElementById(
+            "addExpenseCard"
+        )
+        .scrollIntoView({
+
+            behavior:"smooth",
+
+            block:"center"
+
+        });
+
+
+    setTimeout(() => {
+
+        document
+            .getElementById(
+                "expenseName"
+            )
+            .focus();
+
+    },500);
+
+}
+
+
+/* SEARCH */
+
+document
+    .getElementById("searchInput")
+    .addEventListener(
+        "input",
+        renderExpenses
+    );
+
+
+document
+    .getElementById("filterCategory")
+    .addEventListener(
+        "change",
+        renderExpenses
+    );
+
+
+/* MAIN RENDER */
+
+function renderAll(){
+
+    renderDashboard();
+
+    renderMonthlyHistory();
+
+    renderCategories();
+
+    renderExpenses();
+
+}
+
+
+/* PWA SERVICE WORKER */
+
+if("serviceWorker" in navigator){
+
+    window.addEventListener(
+        "load",
+        () => {
+
+            navigator.serviceWorker
+                .register("./sw.js")
+                .then(() => {
+
+                    console.log(
+                        "Spendly offline mode enabled."
+                    );
+
+                })
+                .catch(error => {
+
+                    console.log(
+                        "Service worker registration failed:",
+                        error
+                    );
+
+                });
+
+        }
+    );
+
+}
+
+
+/* START */
+
+renderAll();
+
+</script>
+
+</body>
+</html>
